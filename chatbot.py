@@ -1,6 +1,6 @@
 #use fastapi. make a frontend which connects to fastapi background
 #connect frontend and backend.
-#HR can upload file or paste job description
+#HR can upload file
 #deploy backend on render / railway
 #keep enhancing the project
 import os
@@ -12,8 +12,10 @@ from pydantic import BaseModel
 
 
 load_dotenv()
+
 api_key = os.getenv("GROQ_API_KEY")
 client = Groq(api_key = api_key)
+
 experience = [{
     "Company" : "ADS Web Solutions, Kolkata",
     "Role" : "Junior SME Intern",
@@ -27,6 +29,7 @@ experience = [{
     "Description" : "Hands on practice on training and understanding AI models.",
     "Skills_Used" : ["Artificial Intelligence", "Leadership"]
     }]
+
 resume = {
     "Name" : "Arkaprabha Mallick",
     "Email" : "arkaprabhamallick@gmail.com",
@@ -41,11 +44,18 @@ resume = {
     "Projects" : ["AI ChatBot", "Resume Parser"],
     "Certifications" : None
     }
-user_msg = input()
-yn = client.chat.completions.create(model = model, messages = [{"role" : "system", "content" : """check if the prompt has job description. only return "YES" or "NO" """}, {"role" : "user", "content" : user_msg}]
+
+user_input = input()
+user_msg = {"role" : "user", "content" : user_input}
+
+res = client.chat.completions.create(model = model, messages = [{"role" : "system", "content" : """check if the prompt has job description. only return "YES" or "NO" """}, user_msg]
+yn = res.choices[0].message.content
 txt = "Your job is to respond strictly from the resume. Do not invent anything on your own. Do not lie about any skill degree or something. If you are asked about meaning of anything that is inside the resume then you should answer to that correctly."
-if("YES" in yn) txt = "If a job Description is given to you then list the things that matches from my resume with that job description."
-sys_msg = f"""
+
+if("YES" in yn.upper()) :
+    txt = "If a job Description is given to you then list the things that matches from my resume with that job description."
+
+sys = f"""
 Here is my resume {resume}
 #ROLE
 You are a professional personal assistant of Arkaprabha Mallick.
@@ -61,5 +71,7 @@ Give output in easily readable by human format.
 #FALLBACK
 If the prompt is unrelated to my resume then return "Sorry I only answer about technical / professional queries related to Arkaprabha Mallick."
 """
+sys_msg = {"role" : "system", "content" : sys}
 
+messages = [sys_msg, user_msg]
 #implement memory for the chatbot
