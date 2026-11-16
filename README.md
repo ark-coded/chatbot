@@ -1,2 +1,2 @@
-# chatbot
-This is a chatbot that tells about me and my resume
+#ChatBot
+This chatbot tells about me
