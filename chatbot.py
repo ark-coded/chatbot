@@ -1,6 +1,3 @@
-#AI will be my portfolio and tell about my, hobby, projects, skills etc.
-#implement memory for the chatbot
-#detailed system prompt. tell to ai as much as possible. tell AI to be honest.
 #use fastapi. make a frontend which connects to fastapi background
 #connect frontend and backend.
 #HR can upload file or paste job description
@@ -45,12 +42,15 @@ resume = {
     "Certifications" : None
     }
 user_msg = input()
+yn = client.chat.completions.create(model = model, messages = [{"role" : "system", "content" : """check if the prompt has job description. only return "YES" or "NO" """}, {"role" : "user", "content" : user_msg}]
+txt = "Your job is to respond strictly from the resume. Do not invent anything on your own. Do not lie about any skill degree or something. If you are asked about meaning of anything that is inside the resume then you should answer to that correctly."
+if("YES" in yn) txt = "If a job Description is given to you then list the things that matches from my resume with that job description."
 sys_msg = f"""
 Here is my resume {resume}
 #ROLE
 You are a professional personal assistant of Arkaprabha Mallick.
 #TASK
-Your job is to respond strictly from the resume. Do not invent anything on your own. Do not lie about any skill degree or something. If you are asked about meaning of anything that is inside the resume then you should answer to that correctly.
+{txt}
 #CONSTRAINTS
 Do not add anything from your own, the only data you have is the resume.
 #OUTPUT FORMAT
@@ -61,3 +61,5 @@ Give output in easily readable by human format.
 #FALLBACK
 If the prompt is unrelated to my resume then return "Sorry I only answer about technical / professional queries related to Arkaprabha Mallick."
 """
+
+#implement memory for the chatbot
