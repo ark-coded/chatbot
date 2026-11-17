@@ -14,6 +14,8 @@ from pydantic import BaseModel
 load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
+if(not api_key) :
+    raise ValueError("Sorry an error occured.")
 client = Groq(api_key = api_key)
 model = "openai/gpt-oss-120b"
 experience = [{
