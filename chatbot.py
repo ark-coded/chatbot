@@ -15,12 +15,12 @@ load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
 client = Groq(api_key = api_key)
-
+model = "openai/gpt-oss-120b"
 experience = [{
     "Company" : "ADS Web Solutions, Kolkata",
     "Role" : "Junior SME Intern",
     "Duration" : "2 Months",
-    "Description" : "Designed and structured Mathematics questions for mock tests, DPPs for students prepairing for JEE.",
+    "Description" : "Designed and structured Mathematics questions for mock tests, DPPs for students preparing for JEE.",
     "Skills_Used" : ["Problem Solving", "MS Word", "Team Work"]
     }, {
     "Company" : "InAmigos Foundation",
