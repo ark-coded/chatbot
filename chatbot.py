@@ -14,10 +14,11 @@ from pydantic import BaseModel
 load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
-if(not api_key) :
-    raise ValueError("Sorry an error occured.")
-client = Groq(api_key = api_key)
+if not api_key:
+    raise ValueError("GROQ_API_KEY not found in environment variables")
+client = Groq(api_key=api_key)
 model = "openai/gpt-oss-120b"
+
 experience = [{
     "Company" : "ADS Web Solutions, Kolkata",
     "Role" : "Junior SME Intern",
@@ -68,5 +69,15 @@ If the prompt is unrelated to my resume or any job description then return "Sorr
 """
 sys_msg = {"role" : "system", "content" : sys}
 messages = [sys_msg, user_msg]
+#Memory part
+while(True) :
+    completion = client.chat.completions.create(
+        model=model,
+        messages=messages
+    )
+    response = completion.choices[0].message.content
+    print(response)
+    messages.append({"role": "user", "content": user_input})
+    messages.append({"role": "assistant", "content": response})
 
-#implement memory for the chatbot
+
