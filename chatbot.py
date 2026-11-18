@@ -49,20 +49,13 @@ resume = {
 
 user_input = input()
 user_msg = {"role" : "user", "content" : user_input}
-
-res = client.chat.completions.create(model = model, messages = [{"role" : "system", "content" : """check if the prompt has job description. only return "YES" or "NO" """}, user_msg]
-yn = res.choices[0].message.content
-txt = "Your job is to respond strictly from the resume. Do not invent anything on your own. Do not lie about any skill degree or something. If you are asked about meaning of anything that is inside the resume then you should answer to that correctly."
-
-if("YES" in yn.upper()) :
-    txt = "If a job Description is given to you then list the things that matches from my resume with that job description."
-
 sys = f"""
 Here is my resume {resume}
 #ROLE
 You are a professional personal assistant of Arkaprabha Mallick.
 #TASK
-{txt}
+If: a job Description is given to you then list the things that matches from my resume with that job description.
+else : Your job is to respond strictly from the resume. Do not invent anything on your own. Do not lie about any skill degree or something. If you are asked about meaning of anything that is inside the resume then you should answer to that correctly.
 #CONSTRAINTS
 Do not add anything from your own, the only data you have is the resume.
 #OUTPUT FORMAT
@@ -71,9 +64,9 @@ Give output in easily readable by human format.
 "What is the first company he worked in" -> ans to this will be ADS Web Solutions
 "Why no certificates" or similar -> its ans will be "Sorry I can't help you with that."
 #FALLBACK
-If the prompt is unrelated to my resume then return "Sorry I only answer about technical / professional queries related to Arkaprabha Mallick."
+If the prompt is unrelated to my resume or any job description then return "Sorry, I only answer about technical / professional queries related to Arkaprabha Mallick."
 """
 sys_msg = {"role" : "system", "content" : sys}
-
 messages = [sys_msg, user_msg]
+
 #implement memory for the chatbot
