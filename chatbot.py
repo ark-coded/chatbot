@@ -77,7 +77,7 @@ while(True) :
     )
     response = completion.choices[0].message.content
     print(response)
-    messages.append({"role": "user", "content": user_input})
     messages.append({"role": "assistant", "content": response})
-
+    usr = input()
+    messages.append({"role" : "user", "content" : usr})
 
