@@ -73,10 +73,12 @@ messages = [sys_msg, user_msg]
 while(True) :
     completion = client.chat.completions.create(
         model=model,
-        messages=messages
+        messages=messages,
+        stream = True
     )
-    response = completion.choices[0].message.content
-    print(response)
+    for chunk in completion:
+        ans = chunk.choices[0].delta.content
+        print(ans, end ="", flush = True)
     time.sleep(2)
     messages.append({"role": "assistant", "content": response})
     usr = input()
