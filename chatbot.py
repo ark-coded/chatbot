@@ -69,18 +69,23 @@ If the prompt is unrelated to my resume or any job description then return "Sorr
 """
 sys_msg = {"role" : "system", "content" : sys}
 messages = [sys_msg, user_msg]
+#keeping sys_prompt + last 10 msges in the memory
+def keep(messages) :
+    if(len(messages) <= 11) :
+        return messages
+    return messages[0] + messages[-10:]
 #Memory part
 while(True) :
     completion = client.chat.completions.create(
         model=model,
-        messages=messages,
+        messages=keep(messages),
         stream = True
     )
     for chunk in completion:
         ans = chunk.choices[0].delta.content
         print(ans, end ="", flush = True)
     time.sleep(2)
-    messages.append({"role": "assistant", "content": response})
+    messages.append({"role": "assistant", "content": completion})
     usr = input()
     messages.append({"role" : "user", "content" : usr})
 
