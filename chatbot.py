@@ -77,6 +77,7 @@ while(True) :
     )
     response = completion.choices[0].message.content
     print(response)
+    time.sleep(2)
     messages.append({"role": "assistant", "content": response})
     usr = input()
     messages.append({"role" : "user", "content" : usr})
