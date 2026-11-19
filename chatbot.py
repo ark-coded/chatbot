@@ -81,11 +81,13 @@ while(True) :
         messages=keep(messages),
         stream = True
     )
+    res = ""
     for chunk in completion:
         ans = chunk.choices[0].delta.content
         print(ans, end ="", flush = True)
+        res += ans or ""
     time.sleep(2)
-    messages.append({"role": "assistant", "content": completion})
+    messages.append({"role": "assistant", "content": res})
     usr = input()
     messages.append({"role" : "user", "content" : usr})
 
