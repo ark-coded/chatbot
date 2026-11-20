@@ -4,12 +4,21 @@
 #deploy backend on render / railway
 #keep enhancing the project
 import os
-from re import A
 import time
+import json
+import io
+from chatbot.main import SYSTEM_PROMPT
 from dotenv import load_dotenv
 from pathlib import Path
+from typing import Dict, List, Optional
 from groq import Groq
+from pypdf import PdfReader
 from pydantic import BaseModel
+
+from fastapi import FastAPI, Request, UploadFile, File, Form, HTTPException
+from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 
 load_dotenv()
@@ -51,7 +60,7 @@ resume = {
 
 user_input = input()
 user_msg = {"role" : "user", "content" : user_input}
-sys = f"""
+SYSTEM_PROMPT = f"""
 Here is my resume {resume}
 #ROLE
 You are a professional personal assistant of Arkaprabha Mallick.
@@ -68,31 +77,18 @@ Give output in easily readable by human format.
 #FALLBACK
 If the prompt is unrelated to my resume or any job description then return "Sorry, I only answer about technical / professional queries related to Arkaprabha Mallick."
 """
-sys_msg = {"role" : "system", "content" : sys}
-messages = [sys_msg, user_msg]
-#keeping sys_prompt + last 10 msges in the memory
-def keep(messages) :
-    if(len(messages) <= 11) :
-        return messages
-    return messages[0] + messages[-10:]
-#Memory part
-while(True) :
-    messages = keep(messages)
-    completion = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        stream = True
-    )
-    res = ""
-    for chunk in completion:
-        ans = chunk.choices[0].delta.content
-        if ans :
-            res += ans
-            print(ans, end="", flush=True)
-    time.sleep(2)
-    messages.append({"role": "assistant", "content": res})
-    usr = input()
-    messages.append({"role" : "user", "content" : usr})
-    
-    
 
+# In-memory session storage: session_id - list of messages
+sessions: Dict[str, List[dict]] = {}
+# Additional context per session 
+session_context: Dict[str, str] = {}
+
+app = FastAPI(title="ARK AI", description="A chatbot that answers questions about Arkaprabha Mallick", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

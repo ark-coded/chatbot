@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arkaprabha Mallick — Resume Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Resume Assistant</h1>
+            <p class="subtitle">Arkaprabha Mallick</p>
+        </header>
+
+        <div class="chat-area" id="chatArea">
+            <div class="message assistant">
+                <div class="bubble">
+                    Hi. I know Arkaprabha's resume. Ask me about his experience, skills, education, or paste a job description to see what matches.
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" accept=".pdf,.txt" hidden>
+            <button type="button" class="btn-ghost" id="uploadBtn">Upload file (PDF/TXT)</button>
+            <span id="uploadStatus" class="upload-status"></span>
+        </div>
+
+        <form class="input-form" id="inputForm">
+            <textarea id="messageInput" placeholder="Type your question..." rows="1"></textarea>
+            <button type="submit" id="sendBtn" disabled>Send</button>
+        </form>
+
+        <div class="session-info">
+            <span id="sessionId">Session: <code>default</code></span>
+            <button type="button" class="btn-ghost" id="clearBtn">Clear chat</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
