@@ -4,6 +4,7 @@
 #deploy backend on render / railway
 #keep enhancing the project
 import os
+from re import A
 import time
 from dotenv import load_dotenv
 from pathlib import Path
@@ -76,18 +77,22 @@ def keep(messages) :
     return messages[0] + messages[-10:]
 #Memory part
 while(True) :
+    messages = keep(messages)
     completion = client.chat.completions.create(
         model=model,
-        messages=keep(messages),
+        messages=messages,
         stream = True
     )
     res = ""
     for chunk in completion:
         ans = chunk.choices[0].delta.content
-        print(ans, end ="", flush = True)
-        res += ans or ""
+        if ans :
+            res += ans
+            print(ans, end="", flush=True)
     time.sleep(2)
     messages.append({"role": "assistant", "content": res})
     usr = input()
     messages.append({"role" : "user", "content" : usr})
+    
+    
 
