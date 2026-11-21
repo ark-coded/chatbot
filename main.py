@@ -109,3 +109,32 @@ def keep_messages(messages: List[dict]) -> List[dict]:
     if len(messages) <= 11:
         return messages
     return [messages[0]] + messages[-10:]
+
+async def stream_response(session_id: str, user_message: str):
+    messages = get_session(session_id)
+
+    # Add any extra context (e.g., from uploaded files)
+    extra_context = session_context.get(session_id, "")
+    if extra_context:
+        user_message = f"[Additional context from uploaded file:\n{extra_context}\n]\n\nUser: {user_message}"
+
+    messages.append({"role": "user", "content": user_message})
+    messages = keep_messages(messages)
+
+    completion = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        stream=True
+    )
+
+    full_response = ""
+    for chunk in completion:
+        content = chunk.choices[0].delta.content
+        if content:
+            full_response += content
+            yield f"data: {json.dumps({'content': content})}\n\n"
+
+    messages.append({"role": "assistant", "content": full_response})
+    sessions[session_id] = keep_messages(messages)
+    yield f"data: {json.dumps({'done': True})}\n\n"
+
