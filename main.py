@@ -138,3 +138,6 @@ async def stream_response(session_id: str, user_message: str):
     sessions[session_id] = keep_messages(messages)
     yield f"data: {json.dumps({'done': True})}\n\n"
 
+class ChatRequest(BaseModel):
+    message: str
+    session_id: Optional[str] = "default"
