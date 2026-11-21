@@ -103,3 +103,9 @@ def get_session(session_id: str) -> List[dict]:
     if session_id not in sessions:
         sessions[session_id] = [{"role": "system", "content": SYSTEM_PROMPT}]
     return sessions[session_id]
+
+def keep_messages(messages: List[dict]) -> List[dict]:
+    """Keep system prompt + last 10 messages"""
+    if len(messages) <= 11:
+        return messages
+    return [messages[0]] + messages[-10:]
