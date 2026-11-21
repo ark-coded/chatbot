@@ -92,3 +92,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve frontend
+frontend_path = Path(__file__).parent / "frontend"
+if frontend_path.exists():
+    app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
+
+
+def get_session(session_id: str) -> List[dict]:
+    if session_id not in sessions:
+        sessions[session_id] = [{"role": "system", "content": SYSTEM_PROMPT}]
+    return sessions[session_id]
