@@ -141,3 +141,15 @@ async def stream_response(session_id: str, user_message: str):
 class ChatRequest(BaseModel):
     message: str
     session_id: Optional[str] = "default"
+
+@app.get("/")
+async def root():
+    index_file = frontend_path / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+    return HTMLResponse("""
+    <html><body style="font-family: system-ui; padding: 2rem; max-width: 600px; margin: 0 auto;">
+        <h1>Resume Chatbot</h1>
+        <p>Frontend not built yet. Run <code>python main.py</code> after creating frontend/index.html</p>
+    </body></html>
+    """)
