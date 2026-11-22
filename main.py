@@ -153,3 +153,11 @@ async def root():
         <p>Frontend not built yet. Run <code>python main.py</code> after creating frontend/index.html</p>
     </body></html>
     """)
+
+@app.post("/chat")
+async def chat(request: ChatRequest):
+    return StreamingResponse(
+        stream_response(request.session_id, request.message),
+        media_type="text/event-stream"
+    )
+
