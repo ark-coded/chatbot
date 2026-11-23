@@ -161,3 +161,7 @@ async def chat(request: ChatRequest):
         media_type="text/event-stream"
     )
 
+@app.post("/upload")
+async def upload_file(file: UploadFile = File(...), session_id: str = Form("default")):
+    content = await file.read()
+    text = ""
