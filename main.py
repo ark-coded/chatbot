@@ -7,6 +7,8 @@ import os
 import time
 import json
 import io
+
+from gradio_client import file
 from chatbot.main import SYSTEM_PROMPT
 from dotenv import load_dotenv
 from pathlib import Path
@@ -165,3 +167,11 @@ async def chat(request: ChatRequest):
 async def upload_file(file: UploadFile = File(...), session_id: str = Form("default")):
     content = await file.read()
     text = ""
+    if file.filename.endswith(".pdf"):
+        reader = PdfReader(io.BytesIO(content))
+        for page in reader.pages:
+            text += page.extract_text() or ""
+    elif file.filename.endswith(".txt"):
+        text = content.decode("utf-8")
+    else:
+        raise HTTPException(status_code=400, detail="Only PDF and TXT files supported")
