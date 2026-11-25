@@ -175,3 +175,6 @@ async def upload_file(file: UploadFile = File(...), session_id: str = Form("defa
         text = content.decode("utf-8")
     else:
         raise HTTPException(status_code=400, detail="Only PDF and TXT files supported")
+    #Context size shrinking
+    if len(text) > 8000:
+        text = text[:8000] + "\n[truncated]"
