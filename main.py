@@ -178,3 +178,6 @@ async def upload_file(file: UploadFile = File(...), session_id: str = Form("defa
     #Context size shrinking
     if len(text) > 8000:
         text = text[:8000] + "\n[truncated]"
+
+    session_context[session_id] = text
+    return {"filename": file.filename, "chars": len(text), "session_id": session_id}
