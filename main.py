@@ -1,15 +1,8 @@
-#use fastapi. make a frontend which connects to fastapi background
-#connect frontend and backend.
-#HR can upload file
-#deploy backend on render / railway
-#keep enhancing the project
 import os
 import time
 import json
 import io
 
-from gradio_client import file
-from chatbot.main import SYSTEM_PROMPT
 from dotenv import load_dotenv
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -60,8 +53,6 @@ resume = {
     "Certifications" : None
     }
 
-user_input = input()
-user_msg = {"role" : "user", "content" : user_input}
 SYSTEM_PROMPT = f"""
 Here is my resume {resume}
 #ROLE
@@ -114,13 +105,6 @@ def keep_messages(messages: List[dict]) -> List[dict]:
 
 async def stream_response(session_id: str, user_message: str):
     messages = get_session(session_id)
-
-    # Add any extra context (e.g., from uploaded files)
-    extra_context = session_context.get(session_id, "")
-    if extra_context:
-        user_message = f"[Additional context from uploaded file:\n{extra_context}\n]\n\nUser: {user_message}"
-
-    messages.append({"role": "user", "content": user_message})
     messages = keep_messages(messages)
 
     completion = client.chat.completions.create(
@@ -180,6 +164,10 @@ async def upload_file(file: UploadFile = File(...), session_id: str = Form("defa
         text = text[:8000] + "\n[truncated]"
 
     session_context[session_id] = text
+    sess = get_session(session_id)
+    sess.append({"role": "system", "content": f"[Uploaded file context:\n{text}\n]"})
+    sessions[session_id] = keep_messages(sess)
+
     return {"filename": file.filename, "chars": len(text), "session_id": session_id}
 
 @app.delete("/session/{session_id}")
@@ -187,3 +175,7 @@ async def clear_session(session_id: str):
     sessions.pop(session_id, None)
     session_context.pop(session_id, None)
     return {"cleared": True}
+
+if __name__ == "__main__":
+      import uvicorn
+      uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
