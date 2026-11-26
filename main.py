@@ -181,3 +181,9 @@ async def upload_file(file: UploadFile = File(...), session_id: str = Form("defa
 
     session_context[session_id] = text
     return {"filename": file.filename, "chars": len(text), "session_id": session_id}
+
+@app.delete("/session/{session_id}")
+async def clear_session(session_id: str):
+    sessions.pop(session_id, None)
+    session_context.pop(session_id, None)
+    return {"cleared": True}
