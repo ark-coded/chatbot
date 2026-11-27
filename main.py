@@ -131,7 +131,7 @@ async def root():
         return FileResponse(str(index_file))
     return HTMLResponse("""
     <html><body style="font-family: system-ui; padding: 2rem; max-width: 600px; margin: 0 auto;">
-        <h1>Resume Chatbot</h1>
+        <h1>ARK AI</h1>
         <p>Frontend not built yet. Run <code>python main.py</code> after creating frontend/index.html</p>
     </body></html>
     """)

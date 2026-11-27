@@ -78,6 +78,7 @@ header h1 {
     gap: 0.75rem;
     padding: 0.5rem 0;
     scroll-behavior: smooth;
+    align-items: center;
 }
 
 .chat-area::-webkit-scrollbar {
@@ -112,6 +113,28 @@ header h1 {
 
 .message.assistant {
     align-self: flex-start;
+}
+
+.message.assistant:first-child {
+    align-self: left;
+    transform: translateX(50px);
+    max-width: 100%;
+    justify-content: center;
+}
+
+.message.assistant:first-child .avatar {
+    display: none;
+}
+
+.message.assistant:first-child .bubble {
+    text-align: center;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 1rem 0;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .message .avatar {
@@ -289,5 +312,19 @@ header h1 {
 
     .container {
         height: calc(100vh - 2rem);
+    }
+
+    /* Mobile welcome message */
+    .message.assistant:first-child .bubble {
+        font-size: 0.9375rem;
+        padding: 1.5rem 1rem;
+    }
+
+    header h1 {
+        font-size: 1.25rem;
+    }
+
+    .subtitle {
+        font-size: 0.8125rem;
     }
 }

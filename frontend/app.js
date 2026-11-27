@@ -154,7 +154,7 @@ async function clearSession() {
 
     // Clear UI
     chatArea.innerHTML = "";
-    addMessage("assistant", "Hi. I know Arkaprabha's resume. Ask me about his experience, skills, education, or paste a job description to see what matches.");
+    addMessage("assistant", "Hey there! You can ask me anything about Arkaprabha Mallick.");
 }
 
 function autoResizeTextarea() {
