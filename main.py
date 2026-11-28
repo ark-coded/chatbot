@@ -173,6 +173,10 @@ async def clear_session(session_id: str):
     session_context.pop(session_id, None)
     return {"cleared": True}
 
+# Mangum handler for Vercel serverless deployment
+from mangum import Mangum
+handler = Mangum(app)
+
 if __name__ == "__main__":
       import uvicorn
       uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
