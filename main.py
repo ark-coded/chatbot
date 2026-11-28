@@ -82,9 +82,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve frontend
-frontend_path = Path(__file__).parent / "frontend"
-if frontend_path.exists():
+# Serve frontend - works both locally and on Vercel
+import sys
+if getattr(sys, 'frozen', False):
+    # Running as compiled executable
+    base_path = Path(sys.executable).parent
+else:
+    # Running as script
+    base_path = Path(__file__).parent
+
+# On Vercel, files are in the same directory as the function
+# Try multiple possible locations
+possible_paths = [
+    base_path / "frontend",
+    base_path.parent / "frontend",  # Vercel sometimes puts function in subdir
+    Path.cwd() / "frontend",
+]
+
+frontend_path = None
+for p in possible_paths:
+    if p.exists():
+        frontend_path = p
+        break
+
+if frontend_path:
     app.mount("/static", StaticFiles(directory=str(frontend_path)), name="static")
 
 
@@ -125,15 +146,28 @@ class ChatRequest(BaseModel):
     message: str
     session_id: Optional[str] = "default"
 
+def get_index_file():
+    """Find index.html in possible locations"""
+    if frontend_path:
+        idx = frontend_path / "index.html"
+        if idx.exists():
+            return idx
+    # Fallback: try common locations
+    for p in possible_paths:
+        idx = p / "index.html"
+        if idx.exists():
+            return idx
+    return None
+
 @app.get("/")
 async def root():
-    index_file = frontend_path / "index.html"
-    if index_file.exists():
+    index_file = get_index_file()
+    if index_file:
         return FileResponse(str(index_file))
     return HTMLResponse("""
     <html><body style="font-family: system-ui; padding: 2rem; max-width: 600px; margin: 0 auto;">
         <h1>ARK AI</h1>
-        <p>Frontend not built yet. Run <code>python main.py</code> after creating frontend/index.html</p>
+        <p>Frontend not found. Ensure frontend/index.html exists.</p>
     </body></html>
     """)
 
