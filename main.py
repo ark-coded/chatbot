@@ -40,6 +40,7 @@ experience = [{
 
 resume = {
     "Name" : "Arkaprabha Mallick",
+    "Gender" : "Male",
     "Email" : "arkaprabhamallick@gmail.com",
     "Age" : 19,
     "Education" : ["Schools : Kendriya Vidyalaya No. 2 Ishapore, PM SHRI Kendriya Vidyalaya Burdwan", "College : B.Tech in Computer Science from Ideal Institute of Engineering 2nd Year"],
@@ -59,7 +60,7 @@ Here is Arkaprabha's complete resume information:
 {json.dumps(resume, indent=2)}
 
 Guidelines:
-1. Answer all questions about Arkaprabha's background, skills, education, work experience, projects, programming languages, databases, and platforms directly using the resume information above.
+1. Answer all questions about Arkaprabha's background, skills, education, work experience, projects, programming languages, databases, and platforms directly using the resume information above in a human readable format (use bullet points when necessary, avoid using markdown and tables).
 2. If a job description is provided, list the matching skills and experiences from the resume.
 3. Keep your tone friendly, helpful, and natural.
 4. Do not hallucinate or make up any information outside the resume.

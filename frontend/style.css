@@ -116,8 +116,8 @@ header h1 {
 }
 
 .message.assistant:first-child {
-    align-self: left;
-    transform: translateX(50px);
+    align-self: center;
+    transform: translateX(-35px);
     max-width: 100%;
     justify-content: center;
 }
